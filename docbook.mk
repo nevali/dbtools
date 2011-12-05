@@ -11,9 +11,10 @@ PS ?= postscript/$(NAME).$(BOOKLANG).ps
 EPUB ?= epub/book.$(BOOKLANG).epub
 TOC_NCX ?= epub/toc.$(BOOKLANG).ncx
 EPUB_MANIFEST ?= epub/manifest.$(BOOKLANG).xml
+HTML ?= html/$(NAME).$(BOOKLANG).html
 WEBSITE ?= website
 
-all: $(PDF) $(PS) $(WEBSITE)
+all: $(PDF) $(PS) $(WEBSITE) $(HTML)
 
 fo: $(FO)
 pdf: $(PDF)
@@ -68,12 +69,22 @@ $(WEBSITE): $(DOCBOOK) $(CHAPTER_SRC)
 		--stringparam chunker.output.encoding UTF-8 \
 		--stringparam chunker.output.omit-xml-declaration yes \
 		--stringparam html.stylesheet 'doc.css' \
-		--stringparam css.decoration 0 \
 		--stringparam chunk.section.depth 0 \
 		'http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl' \
 		$(DOCBOOK)
 	ln -s `pwd`/dbtools/doc.css $(WEBSITE)/doc.css
 
+## Generate a single HTML file from DocBook-XML
+$(HTML): $(DOCBOOK) $(CHAPTER_SRC)
+	mkdir -p `dirname $(HTML)`
+	xsltproc --nonet \
+		--xinclude \
+		--output $(HTML) \
+		--stringparam html.stylesheet 'doc.css' \
+		'http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl' \
+		$(DOCBOOK)
+	rm -f `dirname $(HTML)`/doc.css
+	ln -s `pwd`/dbtools/doc.css `dirname $(HTML)`/doc.css
 
 $(EPUB): $(EPUB_MANIFEST) $(CHAPTERS) $(TOC_NCX)
 	rm -rf work $@
