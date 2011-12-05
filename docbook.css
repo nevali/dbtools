@@ -1,3 +1,12 @@
+/*
+ * This stylesheet is intended to be used within a DocBook-XML source file
+ * to aid in previewing.
+ *
+ * To use it, add an <?xml-stylesheet?> declaration, e.g.:
+ *
+ * <?xml-stylesheet href="dbtools/docbook.css" type="text/css"?>
+ */
+
 @namespace "http://docbook.org/ns/docbook";
 
 /* Headings */
