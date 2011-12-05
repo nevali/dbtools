@@ -1,0 +1,84 @@
+@namespace "http://docbook.org/ns/docbook";
+
+/* Headings */
+title {
+	font-family: 'Gill Sans';
+}
+chapter>title {
+	font-size: 36pt;
+}
+chapter>section>title {
+	font-size: 24pt;
+}
+
+/* Inline styles */
+emphasis {
+	font-style: italic;
+}
+citation:before { content: '[' }
+citation:after { content: ']' }
+citation:before, citation:after {
+	font-size: 90%;
+}
+citation {
+	font-size: 85%;
+}
+citation[role="inline"] {
+	font-size: 70%;
+	vertical-align: bottom;
+}
+citation[role="inline"]:before, citation[role="inline"]:after {
+	font-size: 80%;
+	vertical-align: bottom;
+}
+phrase[role="rfc2119"] {
+	font-family: 'Gill Sans';
+	text-transform: uppercase;
+	font-size: 85%;
+}
+
+/* Lists */
+itemizedlist
+{
+	display: block;
+}
+listitem
+{
+	display: list-item;
+	margin-left: 2em;
+}
+itemizedlist>listitem {
+	list-style: disc outside;
+}
+
+/* Paragraphs */
+para {
+	margin: 0.75em 0;
+}
+
+/* Callouts */
+note {
+	font-family: 'Gill Sans';
+	color: rgb(71,20,0);
+}
+
+/* Structure */
+book, chapter, sect, sect1, sect2, sect3, sect4, sect5, sect6, sect7, para, simplepara, note, title
+{
+	display: block;
+}
+
+book, chapter, section {
+	margin: auto;
+	max-width: 960px;
+	font-family: 'Palatino';
+	font-size: 16pt;
+}
+chapter>*, section>* {
+	margin-left: 1cm;
+	margin-right: 1cm;
+}
+title {
+	margin-left: 0;
+	margin-right: 0;
+}
