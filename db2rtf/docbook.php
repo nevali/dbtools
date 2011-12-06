@@ -31,7 +31,6 @@ class DocbookProcessor
 		$this->doc = new DOMDocument();
 		$this->doc->load($filename);
 		$this->root = $this->doc->documentElement;
-//		$this->root = $this->doc->firstChild;
 	}
 
 	public function process($output)
@@ -43,7 +42,7 @@ class DocbookProcessor
 			$p->process($output);
 			break;
 		default:
-			trigger_error("Don't know how to process a <" . $el . ">", E_USER_ERROR);
+			trigger_error("Don't know how to process a <" . $this->root->localName . ">", E_USER_ERROR);
 			return;
 		}
 	}
