@@ -22,13 +22,14 @@ $rtf->widowsOrphans = true;
 $rtf->viewKind = 1;
 $rtf->viewZoomKind = 1;
 
-$rtf->defaultFont->name = 'Palatino-Roman';
-$rtf->defaultFont->altNames = array('Palatino', 'Georgia');
+$rtf->defaultFont->name = 'Palatino';
+$rtf->defaultFont->altName = 'Palatino Linotype';
 $rtf->defaultFont->family = 'roman';
 
-$palatino = $rtf->font('Palatino-Roman', 'roman', array('Palatino', 'Georgia'));
-$gillSans = $rtf->font('GillSans', 'swiss', array('Gill Sans'));
-$consolas = $rtf->font('Consolas', 'modern', array('Menlo', 'Courier New'));
+$palatino = $rtf->font('Palatino', 'roman');
+$gillSans = $rtf->font('Gill Sans', 'swiss');
+$gillSansLight = $rtf->font('Gill Sans Light', 'swiss');
+$consolas = $rtf->font('Consolas', 'modern');
 
 $rtf->defaultStyle->size = 16;
 $rtf->defaultStyle->leftIndent = 28;
@@ -42,13 +43,35 @@ $rtf->style('Cover-page author', $gillSans, 12, $rtf->colour(71, 20, 0));
 
 $rtf->style('Cover-page affiliation', $gillSans, 18);
 
-$rtf->style('Heading 1', $gillSans, 36);
+$s = $rtf->style('Heading 1', $gillSans, 36);
+$s->keepWithNext = true;
+$s->leftIndent = -4;
 
-$rtf->style('Heading 2', $gillSans, 18);
+$s = $rtf->style('Heading 2', $gillSans, 18);
+$s->keepWithNext = true;
+
+$s = $rtf->style('TOC Level 1', $gillSans, 18);
+$s->spaceBefore = $s->spaceAfter = 6;
+
+$s = $rtf->style('TOC Level 2', $gillSans, 12);
+$s->leftIndent = 28;
+$s->rightIndent = 28;
+$s->spaceBefore = $s->spaceAfter = 6;
+
+$s = $rtf->style('TOC Level 3', $gillSansLight, 12);
+$s->leftIndent = 28;
+$s->rightIndent = 28;
+$s->spaceBefore = $s->spaceAfter = 6;
+
+$s = $rtf->style('TOC Level 4', $gillSansLight, 12);
+$s->leftIndent = 36;
+$s->rightIndent = 36;
+$s->spaceBefore = $s->spaceAfter = 6;
 
 $s = $rtf->style('Note', $gillSans, 16, $rtf->colour(71, 20, 0));
 $s->leftIndent = $s->rightIndent = 28;
 $s->spaceBefore = $s->spaceAfter = 12;
+$s->keepWithNext = true;
 
 $s = $rtf->charstyle('mathphrase');
 $s->font = $palatino;
@@ -57,6 +80,13 @@ $s->italic = true;
 
 $s = $rtf->charstyle('type');
 $s->font = $consolas;
+$s->size = 14;
+
+$s = $rtf->charstyle('phrase', 'rfc2119', true);
+$s->font = $gillSans;
+$s->allCaps = true;
+$s->size = 14;
+
 $s = $rtf->charstyle('classname');
 $s->font = $consolas;
 
@@ -66,3 +96,13 @@ $s->size = 12;
 $s = $rtf->charstyle('emphasis', 'brand', true);
 $s->font = $palatino;
 $s->italic = true;
+
+$t = $rtf->listTemplate();
+$t->style->font = $palatino;
+$t->style->size = 16;
+$t->style->leftIndent = 56;
+$t->style->firstIndent = -18;
+$t->style->rightIndent = 56;
+$t->style->spaceBefore = 6;
+$t->style->spaceAfter = 6;
+$t->style->keepTogether = true;

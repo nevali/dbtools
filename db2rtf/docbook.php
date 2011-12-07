@@ -19,6 +19,7 @@
 abstract class Docbook
 {
 	public static $blocks = array('para', 'simplepara', 'note', 'tip', 'warning');
+	public static $lists = array('itemizedlist');
 }
 
 class DocbookProcessor
@@ -128,7 +129,7 @@ class DocbookBookProcessor
 					$toc[] = $sect;
 					continue;
 				}
-				trigger_error("Don't know how to process a <" . $child->getName() . ">", E_USER_ERROR);
+				trigger_error("Don't know how to process a <" . $child->getName() . "> within a <book>", E_USER_ERROR);
 			}
 
 		}		
@@ -147,6 +148,10 @@ class DocbookBookProcessor
 
 	protected function emitToc($output, $tocSect, $toc, $level = 1)
 	{
+		if($level >= 5)
+		{
+			return;
+		}
 		foreach($toc as $entry)
 		{
 			if($entry->title !== null)
@@ -312,13 +317,19 @@ class DocbookSectionProcessor
 					$this->toc[] = $p;
 					continue;
 				}
-				if($child->localName == 'para' || $child->localName == 'note')
+				if(in_array($child->localName, Docbook::$blocks))
 				{
 					$p = new DocbookBlockProcessor($child);
 					$p->process($rtf, $sect);
 					continue;
 				}
-				trigger_error("Don't know how to process a <" . $child->localName . ">", E_USER_WARNING);
+				if(in_array($child->localName, Docbook::$lists))
+				{
+					$p = new DocbookListProcessor($child);
+					$p->process($rtf, $sect);
+					continue;
+				}
+				trigger_error("Don't know how to process a <" . $child->localName . "> within a <" . $this->section->localName . ">", E_USER_WARNING);
 			}
 		}
 	}
@@ -334,9 +345,64 @@ class DocbookChapterProcessor extends DocbookSectionProcessor
 	}
 }
 
+class DocbookListProcessor
+{
+	protected $element;
+	protected $indentLevel = 0;
+
+	public function __construct($element)
+	{
+		$this->element = $element;
+	}
+
+	public function process(RTF $rtf, RTFSection $section = null, $para = null, $style = null)
+	{
+		$list = $rtf->listTemplate();
+		for($child = $this->element->firstChild; $child; $child = $child->nextSibling)
+		{
+			if($child instanceof DOMElement)
+			{
+				if($child->localName == 'listitem')
+				{
+					$this->processItem($child, $list, $rtf, $section, $style);
+				}
+				else
+				{
+					trigger_error("Don't know how to process a <" . $child->localName . "> within a <" . $this->element->localName . ">", E_USER_WARNING);
+				}
+			}
+		}
+	}
+
+	protected function processItem(DOMElement $item, RTFListTemplate $list, RTF $rtf, RTFSection $sect, $para = null, $style = null)
+	{
+		$paraIndex = 0;
+		for($child = $item->firstChild; $child; $child = $child->nextSibling)
+		{
+			if($child instanceof DOMElement)
+			{
+				if(in_array($child->localName, Docbook::$blocks))
+				{
+					$p = new DocbookBlockProcessor($child);
+					$p->listTemplate = $list;
+					$p->paraIndex = $paraIndex;
+					$p->indentLevel = $this->indentLevel;
+					$p->process($rtf, $sect, $para, $style);
+					$paraIndex++;
+					continue;
+				}
+				trigger_error("Don't know how to process a <" . $child->localName . "> within a <" . $item->localName . ">", E_USER_ERROR);
+			}
+		}
+	}
+}
+
 class DocbookBlockProcessor
 {
 	protected $element;
+	public $listTemplate = null;
+	public $indentLevel = 0;
+	public $paraIndex = 0;
 	
 	public function __construct($element)
 	{
@@ -348,6 +414,15 @@ class DocbookBlockProcessor
 		if($section === null)
 		{
 			$section = $rtf->section();
+			$para = null;
+		}
+		if($this->listTemplate)
+		{
+			$style = $this->listTemplate->style;
+			if($para !== null && $para->style !== $style)
+			{
+				$para = null;
+			}
 		}
 		if($this->element->localName == 'para' || $this->element->localName == 'simplepara')
 		{
@@ -382,6 +457,14 @@ class DocbookBlockProcessor
 			if($para === null)
 			{
 				$para = $section->para($style);
+				$para->indentLevel = $this->indentLevel;
+				if($this->listTemplate !== null)
+				{
+					if($this->paraIndex != 0)
+					{
+						$para->skipListDecoration = true;
+					}
+				}
 			}
 			$p = new DocbookInlineProcessor($child);
 			$p->process($rtf, $section, $para, $style);
@@ -418,7 +501,17 @@ class DocbookInlineProcessor
 			}
 			$role = $this->element->getAttribute('role');
 			$charstyle = $rtf->charstyle($name, $role);
+			if($name == 'citation')
+			{
+				$before = $para->span($charstyle);
+				$before->text = '[';
+			}
 			$this->processChildren($rtf, $section, $para, $style, $charstyle);
+			if($name == 'citation')
+			{
+				$after = $para->span($charstyle);
+				$after->text = ']';
+			}
 			return;
 		}
 		print_r($this);
