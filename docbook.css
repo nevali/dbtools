@@ -15,6 +15,7 @@ title {
 }
 chapter>title {
 	font-size: 36pt;
+	margin-left: -4pt;
 }
 chapter>section>title {
 	font-size: 24pt;
@@ -27,17 +28,17 @@ emphasis {
 citation:before { content: '[' }
 citation:after { content: ']' }
 citation:before, citation:after {
-	font-size: 90%;
-}
-citation {
 	font-size: 85%;
 }
-citation[role="inline"] {
+citation {
 	font-size: 70%;
+}
+citation[role="inline"] {
+	font-size: 85%;
 	vertical-align: bottom;
 }
 citation[role="inline"]:before, citation[role="inline"]:after {
-	font-size: 80%;
+	font-size: 90%;
 	vertical-align: bottom;
 }
 phrase[role="rfc2119"] {
@@ -45,7 +46,22 @@ phrase[role="rfc2119"] {
 	text-transform: uppercase;
 	font-size: 85%;
 }
-
+mathphrase {
+	color: #333;
+	font-style: italic;
+}
+superscript {
+	font-size: 10pt;
+	vertical-align: top;
+}
+subscript {
+	font-size: 10pt;
+	vertical-align: bottom;
+}
+type, varname, classname, parameter {
+	font-family: Consolas, Menlo, monsopace;
+	font-size: 95%;
+}
 /* Lists */
 itemizedlist
 {
