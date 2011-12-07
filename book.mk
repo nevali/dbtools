@@ -13,6 +13,10 @@ TOC_NCX ?= epub/toc.$(BOOKLANG).ncx
 EPUB_MANIFEST ?= epub/manifest.$(BOOKLANG).xml
 HTML ?= html/$(NAME).$(BOOKLANG).html
 WEBSITE ?= website
+RTF ?= rtf/$(NAME).$(BOOKLANG).rtf
+
+DBTOOLS ?= $(shell cd dbtools && pwd)
+PHP ?= php
 
 all: $(PDF) $(PS) $(WEBSITE) $(HTML)
 
@@ -22,6 +26,13 @@ ps: $(PS)
 epub: $(EPUB)
 web: $(WEBSITE)
 html: $(HTML)
+rtf: $(RTF)
+
+wellformed: $(DOCBOOK)
+	xmllint --xinclude --noout --nonet $(DOCBOOK)
+
+valid: $(DOCBOOK)
+	xmllint --xinclude --noout --nonet --valid $(DOCBOOK)
 
 define container_xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -59,6 +70,14 @@ $(PS): $(FO)
 	mkdir -p `dirname $(PS)`
 	xmlroff -o $@ --format=postscript $<
 
+## Generate RTF via DSSSL/OpenJade
+## Generate PostScript from XSL-FO
+$(RTF): $(DOCBOOK) 
+	mkdir -p `dirname $(RTF)`
+	xmllint --xinclude --nonet $(DOCBOOK) > single.xml
+	$(PHP) -f $(DBTOOLS)/db2rtf.php single.xml $(RTF)
+
+
 ## Generate an HTML site from DocBook-XML
 $(WEBSITE): $(DOCBOOK) $(CHAPTER_SRC)
 	rm -rf $(WEBSITE)
@@ -72,7 +91,7 @@ $(WEBSITE): $(DOCBOOK) $(CHAPTER_SRC)
 		--stringparam chunk.section.depth 0 \
 		'http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl' \
 		$(DOCBOOK)
-	ln -s `pwd`/dbtools/doc.css $(WEBSITE)/doc.css
+	ln -s $(DBTOOLS)/doc.css $(WEBSITE)/doc.css
 
 ## Generate a single HTML file from DocBook-XML
 $(HTML): $(DOCBOOK) $(CHAPTER_SRC)
@@ -84,7 +103,7 @@ $(HTML): $(DOCBOOK) $(CHAPTER_SRC)
 		'http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl' \
 		$(DOCBOOK)
 	rm -f `dirname $(HTML)`/doc.css
-	ln -s `pwd`/dbtools/doc.css `dirname $(HTML)`/doc.css
+	ln -s $(DBTOOLS)/doc.css `dirname $(HTML)`/doc.css
 
 $(EPUB): $(EPUB_MANIFEST) $(CHAPTERS) $(TOC_NCX)
 	rm -rf work $@
