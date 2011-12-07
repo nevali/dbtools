@@ -11,16 +11,68 @@ h1, h2 {
 	font-family: 'Gill Sans';
 	font-weight: normal;
 }
-
+h1 {
+	margin: 0 0 12pt 0;
+}
+div.author {
+	font-family: 'Gill Sans';
+	font-size: 14pt;
+}
+div.author>h3 {
+	font-weight: normal;
+	margin: 6pt 0;
+}
+div.author>div.affiliation {
+	font-size: 12pt;
+	margin: 6pt;
+}
+div.toc>p {
+	display: none;
+}
+hr {
+	border: none;
+	border-top: solid #888 1px;
+}
 /* Paragraphs */
 p {
 	margin: 0.75em 0;
 }
+div.note {
+	font-family: 'Gill Sans';
+	margin: 0 1cm !important;
+	color: rgb(71,20,0);
+}
+div.note h3 {
+	display: none;
+}
 /* Inline */
-span[class="rfc2119"] {
+span.rfc2119 {
 	font-family: 'Gill Sans';
 	text-transform: uppercase;
 	font-size: 85%;
+}
+span.citation {
+	font-size: 75%;
+}
+span.brand {
+	font-family: 'Palatino';
+	font-style: italic;
+}
+a:link {
+	color: #000077;
+	text-decoration: none;
+}
+a:visited {
+	color: #220077;
+	text-decoration: none;
+}
+a:hover, a:active {
+	color: #770000;
+	text-decoration: underline;
+}
+.mathphrase {
+	font-style: italic;
+	color: #333;
 }
 /* Structure */
 .book, .chapter, .section {
@@ -32,6 +84,9 @@ span[class="rfc2119"] {
 .chapter>*, .section>* {
 	margin-left: 1cm;
 	margin-right: 1cm;
+}
+.section > .section {
+	margin: 0;
 }
 .title {
 	margin-left: 0;
