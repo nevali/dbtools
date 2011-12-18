@@ -9,6 +9,11 @@
 
 @namespace "http://docbook.org/ns/docbook";
 
+/* Global */
+* {
+	word-wrap: break-word;
+}
+
 /* Headings */
 title {
 	font-family: 'Gill Sans';
@@ -23,6 +28,10 @@ chapter>section>title {
 
 /* Inline styles */
 emphasis {
+	font-style: italic;
+}
+[role="brand"] {
+	font-family: 'Palatino';
 	font-style: italic;
 }
 citation:before { content: '[' }
@@ -58,7 +67,7 @@ subscript {
 	font-size: 10pt;
 	vertical-align: bottom;
 }
-type, varname, classname, parameter {
+type, varname, classname, parameter, constant, computeroutput {
 	font-family: Consolas, Menlo, monsopace;
 	font-size: 95%;
 }
@@ -80,7 +89,16 @@ itemizedlist>listitem {
 para {
 	margin: 0.75em 0;
 }
-
+literallayout {
+	display: inline-block;
+	white-space: pre;
+	margin: 0.75em auto;
+	padding: 8px;
+	background: #dedede;
+	border: solid #ccc 1px;
+	color: #444;
+	width: auto;
+}
 /* Callouts */
 note {
 	font-family: 'Gill Sans';
@@ -107,3 +125,41 @@ title {
 	margin-left: 0;
 	margin-right: 0;
 }
+
+/* Tables */
+table {
+	display: table;
+	table-layout: fixed;
+	border-collapse: collapse;
+	width: 100%;
+	max-width: 100%;
+	margin: 0.75em 1cm;
+}
+tr {
+	display: table-row;
+	border: solid #000 1px;
+}
+td, th {
+	display: table-cell;
+	padding: 4px;
+	border: solid #000 1px;
+	word-wrap: break-word;
+}
+td[role="level-2"] {
+	text-indent: 1.5em;
+}
+td[role="level-3"] {
+	text-indent: 2.5em;
+}
+thead {
+	display: table-header-group;
+	background: #dedede;
+}
+th {
+	font-family: 'Gill Sans';
+	text-align: center;
+}
+tbody {
+	display: table-row-group;
+}
+
