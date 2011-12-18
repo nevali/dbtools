@@ -18,7 +18,7 @@ RTF ?= rtf/$(NAME).$(BOOKLANG).rtf
 DBTOOLS ?= $(shell cd dbtools && pwd)
 PHP ?= php
 
-all: $(PDF) $(PS) $(WEBSITE) $(HTML)
+all: $(WEBSITE) $(HTML) $(RTF)
 
 fo: $(FO)
 pdf: $(PDF)
