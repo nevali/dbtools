@@ -19,6 +19,7 @@
 $rtf->paper = array(11907, 16840);
 $rtf->margins = array(1440, 1440, 1800, 1800);
 $rtf->widowsOrphans = true;
+$rtf->keepTogether = true;
 $rtf->viewKind = 1;
 $rtf->viewZoomKind = 1;
 
