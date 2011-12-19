@@ -25,6 +25,9 @@ chapter>title {
 chapter>section>title {
 	font-size: 24pt;
 }
+chapter>section>section>title {
+	font-size: 18pt;
+}
 
 /* Inline styles */
 emphasis {
@@ -88,6 +91,7 @@ itemizedlist>listitem {
 /* Paragraphs */
 para {
 	margin: 0.75em 0;
+	line-height: 1.4em;
 }
 literallayout {
 	display: inline-block;
@@ -122,8 +126,7 @@ chapter>*, section>* {
 	margin-right: 1cm;
 }
 title {
-	margin-left: 0;
-	margin-right: 0;
+	margin: 0.75em 0;
 }
 
 /* Tables */
